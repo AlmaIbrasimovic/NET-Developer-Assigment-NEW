@@ -7,4 +7,4 @@ After cloning the repository, couple things need to be done in order to run the 
 * After that, under the folder `Migrations`, couple `.cs` classes will be created
 * Finally, run the application
 
-When creating migration, make sure that `Microsoft SQL Server Management Studio` is running.
+When creating migration, make sure that `Microsoft SQL Server Management Studio` is running. If everything is finished without errors, you should see database named `BlogDatabase` under your databases folder.
