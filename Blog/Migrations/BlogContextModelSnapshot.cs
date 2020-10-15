@@ -21,7 +21,7 @@ namespace Blog.Migrations
 
             modelBuilder.Entity("Blog.Models.Post", b =>
                 {
-                    b.Property<string>("slug")
+                    b.Property<string>("guid")
                         .ValueGeneratedOnAdd();
 
                     b.Property<string>("body");
@@ -30,11 +30,13 @@ namespace Blog.Migrations
 
                     b.Property<string>("description");
 
+                    b.Property<string>("slug");
+
                     b.Property<string>("title");
 
                     b.Property<DateTime>("updatedAt");
 
-                    b.HasKey("slug");
+                    b.HasKey("guid");
 
                     b.ToTable("Post");
                 });
@@ -45,13 +47,13 @@ namespace Blog.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Postslug");
+                    b.Property<string>("Postguid");
 
                     b.Property<string>("name");
 
                     b.HasKey("id");
 
-                    b.HasIndex("Postslug");
+                    b.HasIndex("Postguid");
 
                     b.ToTable("Tag");
                 });
@@ -60,7 +62,7 @@ namespace Blog.Migrations
                 {
                     b.HasOne("Blog.Models.Post")
                         .WithMany("tagList")
-                        .HasForeignKey("Postslug");
+                        .HasForeignKey("Postguid");
                 });
 #pragma warning restore 612, 618
         }

@@ -23,6 +23,7 @@ namespace Blog.DTO
         public String body { get; set; }
         public DateTime createdAt { get; set; }
         public DateTime updatedAt { get; set; }
-        public virtual ICollection<Tag> tagList { get; set; }
+        public List<String> tags { get; set; }
+      //  public virtual ICollection<Tag> tagList { get; set; }
     }
 }

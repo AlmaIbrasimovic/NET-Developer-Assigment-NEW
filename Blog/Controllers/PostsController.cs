@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -31,7 +32,7 @@ namespace Blog.Controllers
             PostsResponseMultiple postRes = new PostsResponseMultiple();
             List<Post> result = new List<Post>();
             var tagList = _context.Posts.Include(x => x.tagList);
-
+            
             switch (tag)
             {
                 case "all":
@@ -52,7 +53,7 @@ namespace Blog.Controllers
         {
 
             // If post with entered slug doesn't exist in DB
-            var postSlug = _context.Posts.Find(slug);
+            var postSlug = _context.Posts.Where(a => a.slug.Contains(slug));
             if (postSlug == null)
             {
                 return BadRequest("Post with selected slug doesn't exist!");
@@ -70,70 +71,66 @@ namespace Blog.Controllers
        
         // PUT
         [HttpPut("{slug}")]
-        public async Task<IActionResult> UpdatePost([FromRoute] String slug, [FromBody] Post post)
+        public async Task<IActionResult> UpdatePost([FromRoute] String slug, [FromBody] PostResponseSingle postReq)
         {
-            PostServicecs postServices = new PostServicecs(_context);
+            var post = postReq.blogPost;
+            PostService postServices = new PostService(_context);
 
             if (slug != post.slug)
             {
                  return BadRequest("Post with selected slug doesn't exist!");
             }
 
-            // Updating post if the title changes
+
             var oldPost = _context.Posts
                  .Include(i => i.tagList)
                  .First(x => x.slug == slug);
 
-            if (oldPost.title != post.title && post.title != null)
-            {
-                 Post newPost = postServices.updatePostWithTitle(slug, post);
-                 return Ok(newPost);
-            }
 
-            // Updating post if the title didn't change
             var entityPost = postServices.updatePost(slug, post);
             _context.Update(entityPost);
             await _context.SaveChangesAsync();
             return Ok(entityPost);
+            return Ok();
         }
 
         // POST
         [HttpPost]
-        public async Task<IActionResult> PostPost([FromBody] PostDTO post)
+        public async Task<IActionResult> PostPost([FromBody] PostRequestSingle postReq)
         {
+            var post = postReq.blogPost;
             Post newPost = new Post();
-            PostServicecs postServices = new PostServicecs(_context);
+            PostService postServices = new PostService(_context);
 
             newPost = postServices.copyPostDTO(post);
             _context.Posts.Add(newPost);
             await _context.SaveChangesAsync();
             return CreatedAtAction("GetPost", new { slug = post.slug }, newPost);
+         
         }
 
         // DELETE
         [HttpDelete("{slug}")]
         public async Task<IActionResult> DeletePost([FromRoute] String slug)
         {
+            PostService postServices = new PostService(_context);
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
-
-            var post = await _context.Posts.FindAsync(slug);
-            if (post == null)
+            
+            var result = await _context.Posts.FirstOrDefaultAsync(e => e.slug == slug);
+            
+            if (result == null)
             {
                 return NotFound();
             }
 
-            _context.Posts.Remove(post);
+            postServices.deletePost(result);
+            _context.Posts.Remove(result);
             await _context.SaveChangesAsync();
-
-            return Ok(post);
+            return Ok(result);
         }
 
-        private bool PostExists(string id)
-        {
-            return _context.Posts.Any(e => e.slug == id);
-        }
     }
 }

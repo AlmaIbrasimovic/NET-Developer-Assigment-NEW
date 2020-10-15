@@ -9,12 +9,13 @@ namespace Blog.Models
     public class Post
     {
         [Key]
+        public String guid { get; set; }
         public String slug { get; set; }
         public String title { get; set; }
         public String description { get; set; }
         public String body { get; set; }
         public DateTime createdAt { get; set; }
         public DateTime updatedAt { get; set; }
-        public virtual ICollection<Tag> tagList { get; set; }
+        public ICollection<Tag> tagList { get; set; }
     }
 }
