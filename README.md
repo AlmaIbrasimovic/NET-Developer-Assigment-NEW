@@ -1,5 +1,6 @@
 # NET-Developer-Assigment
 
+## Preparing SQL Server database
 Application was created using ASP.NET Core 2.1
 After cloning the repository, couple things need to be done in order to run the application:
 * In the file `appsettings.json`, under `ConnectionStrings`, change `BlogContext` Server name to your SQL Server name
@@ -62,7 +63,7 @@ Request body:
 Optional parameter is `tag`\
 `https://localhost:44326/api/posts?tag=AR`
 
-# Packaged
+# NuGet packages
 Following packages are required in order to run application:
 ```
 Microsoft.AspNetCore.App (version 2.1.1)
