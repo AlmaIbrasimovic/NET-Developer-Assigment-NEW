@@ -18,77 +18,46 @@ namespace Blog.Services
             _context = context;
         }
 
-        public Post updatePostWithTitle(String slug, Post newPost)
-        {
-            var oldPost = _context.Posts
-                .Include(i => i.tagList)
-                .First(x => x.slug == slug);
-
-           if (newPost.body == null) newPost.body = oldPost.body;
-           if (newPost.description == null) newPost.description = oldPost.description;
-           if (newPost.createdAt == null) newPost.createdAt = oldPost.createdAt;
-           newPost.slug = DbInitializer.Slugify(newPost.title);
-           newPost.updatedAt = DateTime.Now;
-
-
-           // Deleting old post
-            _context.Posts.Remove(oldPost);
-
-            //Adding new post
-            _context.Posts.Add(newPost);
-            _context.SaveChanges();
-
-            return newPost;
-        }
-
         public Post updatePost(String slug, Post newPost)
         {
             var oldPost = _context.Posts
                 .Include(i => i.tagList)
                 .First(x => x.slug == slug);
 
-            if (newPost.createdAt != null) oldPost.createdAt = newPost.createdAt;
-            if (newPost.tagList != null)
-            {
-                /*ICollection<Tag> tagList = new List<Tag>();
-                if (post.tags != null)
-                {
-                    foreach (var tag in post.tags)
-                    {
-                        Tag newTag = new Tag() { name = tag };
-                        tagList.Add(newTag);
-                        _context.Tags.Add(newTag);
-                        _context.SaveChanges();
-                    }
-                }
-                newPost.tagList = tagList;*/
-            }
             if (newPost.body != null) oldPost.body = newPost.body;
             if (newPost.description != null) oldPost.description = newPost.description;
+
+            // We compare these two values to DateTime.Min value, which is default value, in case if we didn't send these values
+            // we wouldn't update the values
+            if (newPost.updatedAt != DateTime.MinValue) oldPost.updatedAt = newPost.updatedAt;
+            if (newPost.createdAt != DateTime.MinValue) oldPost.createdAt = newPost.createdAt;
+
             if (newPost.title != oldPost.title && newPost.title != null)
             {
                oldPost.slug = DbInitializer.Slugify(newPost.title);
                oldPost.title = newPost.title;
             }
             else if (newPost.title == oldPost.title && newPost.slug != null) oldPost.slug = newPost.slug;
-            oldPost.updatedAt = DateTime.Now;
 
+            // Updating old post
+            _context.Update(oldPost);
+            _context.SaveChanges();
             return oldPost;
         }
 
-        public Post copyPostDTO(PostDTO post)
+        public Post createPost(PostDTO post)
         {
             Post newPost = new Post();
             newPost.title = post.title;
             newPost.body = post.body;
-            newPost.createdAt = DateTime.Now;
-            newPost.updatedAt = DateTime.Now;
+            newPost.createdAt = post.createdAt;
+            newPost.updatedAt = post.updatedAt;
             newPost.slug = DbInitializer.Slugify(post.title);
             newPost.description = post.description;
             ICollection<Tag> tagList = new List<Tag>();
-            if (post.tags != null)
+            if (post.tagList != null)
             {
-                foreach (var tag in post.tags)
+                foreach (var tag in post.tagList)
                 {
                     Tag newTag = new Tag() {name = tag};
                     tagList.Add(newTag);
@@ -97,6 +66,8 @@ namespace Blog.Services
                 }
             }
             newPost.tagList = tagList;
+            _context.Posts.Add(newPost);
+            _context.SaveChanges();
             return newPost;
         }
 
@@ -105,10 +76,14 @@ namespace Blog.Services
             var tagList = _context.Tags
                 .FromSql("SELECT * FROM Tag WHERE Postguid = @p0", post.guid)
                 .ToList();
+
             foreach (var tag in tagList)
             {
                 _context.Tags.Remove(tag);
             }
+
+            _context.Posts.Remove(post);
+            _context.SaveChanges();
         }
     }
 }

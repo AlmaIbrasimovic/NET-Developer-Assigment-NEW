@@ -15,17 +15,9 @@ namespace Blog.Data
         public static String Slugify(String title)
         {
             String slug = title.Replace("%20", "-").ToLower();
-
-            // Remove all special characters from the string.  
             slug = Regex.Replace(slug, @"[^A-Za-z0-9\s-]", "");
-
-            // Remove all additional spaces in favour of just one.  
             slug = Regex.Replace(slug, @"\s+", " ").Trim();
-
-            // Replace all spaces with the hyphen.  
             slug = Regex.Replace(slug, @"\s", "-");
-
-            // Return the slug.  
             return slug;
         }
 

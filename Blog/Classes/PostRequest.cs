@@ -6,7 +6,7 @@ using Blog.DTO;
 
 namespace Blog.Classes
 {
-    public class PostRequestSingle
+    public class PostRequest
     {
         public PostDTO blogPost { get; set; }
     }

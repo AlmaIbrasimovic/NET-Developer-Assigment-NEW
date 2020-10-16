@@ -25,7 +25,7 @@ namespace Blog.Controllers
             _context = context;
         }
 
-        // GET methods
+        // GET
         [HttpGet]
         public PostsResponseMultiple GetPosts(string tag = "all")
         {
@@ -43,6 +43,8 @@ namespace Blog.Controllers
                              .OrderByDescending(p => (DateTime) p.createdAt).ToList();
                     break;
             }
+
+            postRes.postsCount = result.Count;
             postRes.blogPosts = result;
             return postRes;
         }
@@ -51,86 +53,103 @@ namespace Blog.Controllers
         [HttpGet("{slug}")]
         public async Task<IActionResult> GetPost([FromRoute] String slug)
         {
-
-            // If post with entered slug doesn't exist in DB
-            var postSlug = _context.Posts.Where(a => a.slug.Contains(slug));
-            if (postSlug == null)
+            PostResponseSingle postRes = new PostResponseSingle();
+            try
             {
-                return BadRequest("Post with selected slug doesn't exist!");
+                // If post with entered slug doesn't exist in DB
+                var result = await _context.Posts.FirstOrDefaultAsync(e => e.slug == slug);
+                if (result == null)
+                {
+                    throw new SystemException("Post with selected slug doesn't exist!");
+                }
+
+                // Including tagList in response
+                var post = _context.Posts
+                    .Include(i => i.tagList)
+                    .First(x => x.slug == slug);
+                postRes.blogPost = post;
+            }
+            catch (SystemException e)
+            {
+                return BadRequest(e.Message);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
             }
 
-            // Including tagList in response
-            PostResponseSingle postRes = new PostResponseSingle();
-            var post = _context.Posts
-                .Include(i => i.tagList)
-                .First(x => x.slug == slug);
-            postRes.blogPost = post;
             return Ok(postRes);
         }
 
        
         // PUT
         [HttpPut("{slug}")]
-        public async Task<IActionResult> UpdatePost([FromRoute] String slug, [FromBody] PostResponseSingle postReq)
+        public async Task<IActionResult> UpdatePost([FromRoute] String slug, [FromBody] PutRequest postReq)
         {
-            var post = postReq.blogPost;
-            PostService postServices = new PostService(_context);
+            Post entityPost = new Post();
+            PostResponseSingle response = new PostResponseSingle();
 
-            if (slug != post.slug)
+            try
             {
-                 return BadRequest("Post with selected slug doesn't exist!");
+                PostService postServices = new PostService(_context);
+                if (slug !=postReq.blogPost.slug)
+                {
+                    throw new SystemException("Post with selected slug doesn't exist!");
+                }
+
+                entityPost = postServices.updatePost(slug, postReq.blogPost);
+                response.blogPost = entityPost;
             }
-
-
-            var oldPost = _context.Posts
-                 .Include(i => i.tagList)
-                 .First(x => x.slug == slug);
-
-
-            var entityPost = postServices.updatePost(slug, post);
-            _context.Update(entityPost);
-            await _context.SaveChangesAsync();
-            return Ok(entityPost);
-            return Ok();
+            catch (Exception e)
+            {
+                return BadRequest(e.Message);
+            }
+            
+            return Ok(response);
         }
 
         // POST
         [HttpPost]
-        public async Task<IActionResult> PostPost([FromBody] PostRequestSingle postReq)
+        public async Task<IActionResult> CreatePost([FromBody] PostRequest postReq)
         {
-            var post = postReq.blogPost;
             Post newPost = new Post();
-            PostService postServices = new PostService(_context);
+            PostResponseSingle response = new PostResponseSingle();
 
-            newPost = postServices.copyPostDTO(post);
-            _context.Posts.Add(newPost);
-            await _context.SaveChangesAsync();
-            return CreatedAtAction("GetPost", new { slug = post.slug }, newPost);
-         
+            try
+            {
+                PostService postServices = new PostService(_context);
+                newPost = postServices.createPost(postReq.blogPost);
+                response.blogPost = newPost;
+            }
+            catch (Exception e)
+            {
+                return BadRequest("Some error happened, please try again!");
+            }
+
+            return CreatedAtAction("GetPost", new { slug = postReq.blogPost.slug }, response);
         }
 
         // DELETE
         [HttpDelete("{slug}")]
         public async Task<IActionResult> DeletePost([FromRoute] String slug)
         {
-            PostService postServices = new PostService(_context);
-            if (!ModelState.IsValid)
+            try
             {
-                return BadRequest(ModelState);
+                PostService postServices = new PostService(_context);
+                var result = await _context.Posts.FirstOrDefaultAsync(e => e.slug == slug);
+
+                if (result == null)
+                {
+                    throw new SystemException("Post with selected slug '" + slug + "' doesn't exist");
+                }
+                postServices.deletePost(result);
             }
-            
-            var result = await _context.Posts.FirstOrDefaultAsync(e => e.slug == slug);
-            
-            if (result == null)
+            catch (SystemException e)
             {
-                return NotFound();
+                return BadRequest(e.Message);
             }
 
-            postServices.deletePost(result);
-            _context.Posts.Remove(result);
-            await _context.SaveChangesAsync();
-            return Ok(result);
+            return Ok("Post with slug '" + slug + "' successfully deleted!");
         }
-
     }
 }

@@ -6,9 +6,8 @@ using Blog.Models;
 
 namespace Blog.Classes
 {
-    public class PostsResponseMultiple
+    public class PutRequest
     {
-        public List<Post> blogPosts { get; set; }
-        public int postsCount { get; set; }
+        public Post blogPost { get; set; }
     }
 }

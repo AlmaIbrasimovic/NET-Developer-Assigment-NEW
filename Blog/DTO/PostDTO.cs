@@ -10,7 +10,7 @@ namespace Blog.DTO
     public class PostDTO
     {
         
-        // DTO class for PUT method
+        // DTO class for POST endpoint for Post model
         public String slug { get; set; }
 
         [Required]
@@ -23,7 +23,6 @@ namespace Blog.DTO
         public String body { get; set; }
         public DateTime createdAt { get; set; }
         public DateTime updatedAt { get; set; }
-        public List<String> tags { get; set; }
-      //  public virtual ICollection<Tag> tagList { get; set; }
+        public List<String> tagList { get; set; }
     }
 }
