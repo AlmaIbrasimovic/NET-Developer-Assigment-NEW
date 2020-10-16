@@ -8,3 +8,7 @@ After cloning the repository, couple things need to be done in order to run the 
 * Finally, run the application
 
 When creating migration, make sure that `Microsoft SQL Server Management Studio` is running. If everything is finished without errors, you should see database named `BlogDatabase` under your databases folder.
+
+After you run application, browser will open new address `https://localhost:44326/api/posts`. You can access `Swagger` by entering URL `https://localhost:44326/swagger/index.html`
+
+
