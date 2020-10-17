@@ -5,7 +5,7 @@ Application was created using ASP.NET Core 2.1
 After cloning the repository, couple things need to be done in order to run the application:
 * In the file `appsettings.json`, under `ConnectionStrings`, change `BlogContext` Server name to your SQL Server name
 * In the `Package Manager Console` enter the following commands: `remove-migration` and then `EntityFrameworkCore\Add-Migration Initial` (or any other name then Initial, it's up   to you)
-* After that, under the folder `Migrations`, couple `.cs` classes will be created
+* Since `code-first approach` is used, after successful migaration, under the folder `Migrations`, couple `.cs` classes will be created
 * Finally, run the application
 
 When creating migration, make sure that `Microsoft SQL Server Management Studio` is running. If everything is finished without errors, you should see database named `BlogDatabase` under your databases folder.
@@ -54,14 +54,17 @@ Request body:
 ## DELETE request
 `https://localhost:44326/api/posts/react-native-application`
 
-## GET request (single object)
+## GET request (single Post object)
 `https://localhost:44326/api/posts/react-native-application`
 
-## GET request (all objects)
-`https://localhost:44326/api/posts/react-native-application`
+## GET request (all Post objects)
+`https://localhost:44326/api/posts`
 
 Optional parameter is `tag`\
 `https://localhost:44326/api/posts?tag=AR`
+
+## GET request (all Tag objects)
+`https://localhost:44326/api/tags`
 
 # NuGet packages
 Following packages are required in order to run application:
