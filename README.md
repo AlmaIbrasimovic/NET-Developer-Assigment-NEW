@@ -8,7 +8,7 @@ After cloning the repository, couple things need to be done in order to run the 
 * Since `code-first approach` is used, after successful migaration, under the folder `Migrations`, couple `.cs` classes will be created
 * Finally, run the application
 
-When creating migration, make sure that `Microsoft SQL Server Management Studio` is running. If everything is finished without errors, you should see database named `BlogDatabase` under your databases folder.
+When creating migration, make sure that `Microsoft SQL Server Management Studio 18` is running and make sure that `Windows Authentication` is selected under `Authentication`. If everything is finished without errors, you should see database named `BlogDatabase` under your databases folder.
 
 After you run application, browser will open new address `https://localhost:44326/api/posts`. You can access `Swagger` by entering URL `https://localhost:44326/swagger/index.html`
 
