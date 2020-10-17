@@ -92,9 +92,16 @@ namespace Blog.Controllers
             try
             {
                 PostService postServices = new PostService(_context);
-                if (slug !=postReq.blogPost.slug)
+                if (postReq.blogPost.tagList != null && postReq.blogPost.tagList.Count != 0)
                 {
-                    throw new SystemException("Post with selected slug doesn't exist!");
+                    throw new Exception("You can't update tagList. Please try again without this parameter!");
+                }
+
+                var result = await _context.Posts.FirstOrDefaultAsync(e => e.slug == slug);
+
+                if (result == null)
+                {
+                    throw new SystemException("Post with selected slug '" + slug + "' doesn't exist");
                 }
 
                 entityPost = postServices.updatePost(slug, postReq.blogPost);
@@ -126,7 +133,7 @@ namespace Blog.Controllers
                 return BadRequest("Some error happened, please try again!");
             }
 
-            return CreatedAtAction("GetPost", new { slug = postReq.blogPost.slug }, response);
+            return CreatedAtAction("GetPost", new { slug = response.blogPost.slug }, response);
         }
 
         // DELETE

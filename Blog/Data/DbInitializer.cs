@@ -29,6 +29,7 @@ namespace Blog.Data
                 return;
             };
 
+            // Seeding DB
             var posts = new Post[]
             {
                 new Post{
@@ -69,6 +70,51 @@ namespace Blog.Data
                     {
                         new Tag() {name = "Android"},
                         new Tag() {name = "AR"},
+                    },
+                    createdAt = DateTime.Now,
+                    updatedAt = DateTime.Now
+                },
+
+                new Post{
+                    slug = Slugify("Virtual reality React Native Application"),
+                    title = "Virtual reality React Native Application",
+                    description = "With this app you will feel like you are there!",
+                    body = "The app is simple to use, and will help you experience travelling on another level!",
+                    tagList = new List<Tag>
+                    {
+                        new Tag() {name = "Android"},
+                        new Tag() {name = "iOS"},
+                        new Tag() {name = "ReactNative"},
+                        new Tag() {name = "VR"},
+                    },
+                    createdAt = DateTime.Now,
+                    updatedAt = DateTime.Now
+                },
+
+                new Post{
+                    slug = Slugify("Internet Trends 2018"),
+                    title = "Internet Trends 2018",
+                    description = "Ever wonder how?",
+                    body = "An opinionated commentary, of the most important presentation of the year",
+                    tagList = new List<Tag>
+                    {
+                        new Tag() {name = "trends"},
+                        new Tag() {name = "innovation"},
+                        new Tag() {name = "2018"},
+                    },
+                    createdAt = DateTime.Now,
+                    updatedAt = DateTime.Now
+                },
+
+                new Post{
+                    slug = Slugify("React or Angular"),
+                    title = "React or Angular",
+                    description = "How to choose?",
+                    body = "Detailed blog post on what to choose and why.",
+                    tagList = new List<Tag>
+                    {
+                        new Tag() {name = "React"},
+                        new Tag() {name = "Angular"}
                     },
                     createdAt = DateTime.Now,
                     updatedAt = DateTime.Now

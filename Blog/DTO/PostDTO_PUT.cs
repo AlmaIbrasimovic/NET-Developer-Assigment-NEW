@@ -1,25 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Threading.Tasks;
-using Blog.Models;
 
 namespace Blog.DTO
 {
-    public class PostDTO
+    public class PostDTO_PUT
     {
-        
-        // DTO class for POST endpoint for Post model
-        
-        [Required]
+        public String slug { get; set; }
         public String title { get; set; }
-
-        [Required]
         public String description { get; set; }
-
-        [Required]
         public String body { get; set; }
         public DateTime createdAt { get; set; }
         public DateTime updatedAt { get; set; }

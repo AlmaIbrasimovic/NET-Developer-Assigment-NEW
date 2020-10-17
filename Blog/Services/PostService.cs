@@ -18,8 +18,16 @@ namespace Blog.Services
             _context = context;
         }
 
-        public Post updatePost(String slug, Post newPost)
+        public Post updatePost(String slug, PostDTO_PUT post)
         {
+            Post newPost = new Post();
+            newPost.slug = post.slug;
+            newPost.title = post.title;
+            newPost.createdAt = post.createdAt;
+            newPost.updatedAt = post.updatedAt;
+            newPost.description = post.description;
+            newPost.body = post.body;
+
             var oldPost = _context.Posts
                 .Include(i => i.tagList)
                 .First(x => x.slug == slug);
