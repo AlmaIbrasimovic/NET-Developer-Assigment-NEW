@@ -18,11 +18,13 @@ After you run application, browser will open new address `https://localhost:4432
 ## POST request
 `https://localhost:44326/api/posts`
 
+Required fields are: `title, description and body`\
+Optional field is `tagList`
+
 Request body:
 ```
 {
     "blogPost": {
-        "slug": "react-native-application",
         "title": "React Native Application",
         "description": "Mobile application for AR!",
         "body": "With this app you will feel like you are there!",
@@ -37,11 +39,13 @@ Request body:
 ## PUT request
 `https://localhost:44326/api/posts/react-native-application`
 
+Optional fields: `title, description and body`\
+It's not possible to update `tagList`
+
 Request body:
 ```
 {
     "blogPost": {
-        "slug": "react-native-application",
         "title": "React Native Application New Title",
         "description": "Mobile application for AR New Description!",
         "body": "With this app you will feel like you are there!",
