@@ -88,5 +88,5 @@ Before running the application, please check if all mentioned packages are insta
 Right click on the **Blog** (under Solution Explorer) and select **Manage NuGet Packages** and check under **Installed** tab. If some packages are not installed, please install it before running the application, select **Browse** tab and enter the name of the package and select the version mentioned before.
 
 Demo video showing how the application works and how to start it is available on this link:\
-https://drive.google.com/file/d/1JFMUhMzRbuTv7IAo658fULSEqsubVGyK/view?usp=sharing
+https://www.dropbox.com/s/g82c5wblh9tc0iv/Demo%20video%20for%20the%20application.mp4?dl=0
 
